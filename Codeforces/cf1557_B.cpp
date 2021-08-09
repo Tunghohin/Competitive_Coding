@@ -16,8 +16,6 @@ int main()
 		int n, k, cnt = 0;
 		cin >> n >> k;
 
-		bool flag = true;
-
 		int a[100010], b[100010];
 
 		for (int i = 1; i <= n; i++)
