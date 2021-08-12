@@ -28,7 +28,7 @@ int main()
 
 		for (int i = 1; i <= n; i++)
 		{
-			a[i] = lower_bound(b + 1, b + 1 + n, a[i]) - b;
+			a[i] = lower_bound(b + 1, b + 1 + n, a[i]) - &b[0];
 		}
 
 		for (int i = 1; i <= n; i++)
