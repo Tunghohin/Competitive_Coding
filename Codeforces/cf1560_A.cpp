@@ -22,5 +22,4 @@ int main()
 		cin >> x;
 		cout << v[x  - 1] << '\n';
 	}
-
 }
