@@ -20,12 +20,12 @@ int check(const string &p, const string &s)
 		if (p[pp] == s[sp])
 		{
 			cnt++;
-			sp++;
+			pp++;
 		}
-		pp++;
+		sp++;
 	}
 
-	return (int)p.length() - cnt + (int)s.length() - cnt;
+	return (int)s.length() - cnt + (int)p.length() - cnt;
 }
 
 int main()
@@ -47,7 +47,7 @@ int main()
 
 		for (const auto &i : P2)
 		{
-			ans = min(ans, check(s, i));
+			ans = min(ans, check(i, s));
 		}
 
 		cout << ans << '\n';
