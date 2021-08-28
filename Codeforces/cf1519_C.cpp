@@ -18,8 +18,6 @@ int main()
 	int T;
 	cin >> T;
 
-	int team_cnt = 0;
-
 	while (T--)
 	{
 		int n;
