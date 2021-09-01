@@ -1,15 +1,16 @@
 #include <iostream>
 #include <cstring>
+#define int long long
 
 using namespace std;
 
 int G[110][110];
 int dist[110][110];
 
-long long floyd(int &n)
+int floyd(int &n)
 {
 	memcpy(dist, G, sizeof(G));
-	long long res = 0x3f3f3f3f3f3f3f3f;
+	int res = 0x3f3f3f3f;
 
 	for (int k = 1; k <= n; k++)
 	{
@@ -17,10 +18,7 @@ long long floyd(int &n)
 		{
 			for (int j = i + 1; j < k; j++)
 			{
-				if ((long long)dist[i][j] + G[j][k] + G[k][i] < res)
-				{
-					res = dist[i][j] + G[j][k] + G[k][i];
-				}
+				res = min(res, dist[i][j] + G[i][k] + G[k][j]);
 			}
 		}
 
@@ -31,6 +29,7 @@ long long floyd(int &n)
 				if (dist[i][j] > dist[i][k] + dist[k][j])
 				{
 					dist[i][j] = dist[i][k] + dist[k][j];
+					dist[j][i] = dist[i][j];
 				}
 			}
 		}
@@ -39,7 +38,7 @@ long long floyd(int &n)
 	return res;
 }
 
-int main()
+signed main()
 {
 	ios::sync_with_stdio(false);
 	cin.tie(nullptr);
@@ -47,17 +46,21 @@ int main()
 	int n, m;
 	cin >> n >> m;
 
-	memset(G, 0x3f, sizeof(G));
-	for (int i = 1; i <= n; i++) G[i][i] = 0;
+	for (int i = 1; i <= n; i++)
+	{
+		for (int j = 1; j <= n; j++) G[i][j] = 0x3f3f3f3f;
+	}
 
 	while (m--)
 	{
 		int f, t, v;
 		cin >> f >> t >> v;
-		G[f][t] = G[t][f] = min(G[f][t], v);
+		G[f][t] = G[t][f] = min(G[t][f], v);
 	}
 
-	long long res = floyd(n);
-	if (res == 0x3f3f3f3f3f3f3f3f) cout << "No solution.\n";
+	for (int i = 1; i <= n; i++) G[i][i] = 0;
+
+	int res = floyd(n);
+	if (res == 0x3f3f3f3f) cout << "No solution.";
 	else cout << res << '\n';
 }
