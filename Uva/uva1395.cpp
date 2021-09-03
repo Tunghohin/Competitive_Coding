@@ -37,8 +37,6 @@ bool kruskal(int l, int r, int n)
 		}
 	}
 
-
-
 	if (size == n) return true;
 	else return false;
 }
