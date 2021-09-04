@@ -11,6 +11,7 @@ struct edge
 	{
 		return v < E.v;
 	}
+
 }e[10010];
 
 int p[110];
