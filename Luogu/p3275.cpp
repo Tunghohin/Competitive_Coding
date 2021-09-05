@@ -83,4 +83,5 @@ int main()
 		for (int i = 1; i <= n; i++) res += dist[i];
 		printf("%lld\n", res);
 	}
+
 }
