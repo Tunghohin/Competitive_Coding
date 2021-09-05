@@ -1,3 +1,5 @@
+#pragma GCC optimize(2)
+
 #include <iostream>
 #include <cstring>
 #include <queue>
@@ -7,8 +9,8 @@ using namespace std;
 struct edge
 {
 	int to, val, next;
-}e[10010];
-int head[5010], tot = 0;
+}e[300010];
+int head[100010], tot = 0;
 
 void add_edge(int from, int to, int val)
 {
@@ -18,43 +20,35 @@ void add_edge(int from, int to, int val)
 	head[from] = tot;
 }
 
-long long dist[5010];
-bool vis[5010];
-int cnt[5010];
+int dist[100010];
+bool vis[100010];
+int cnt[100010];
+int q[100010];
 
-bool spfa(int n)
+bool spfa(int &n)
 {
-	memset(dist, 0, sizeof(dist));
-	memset(vis, false, sizeof(vis));
-	memset(cnt, 0, sizeof(cnt));
-	queue<int> q;
+	int hh = 0, tt = 1;
+	memset(dist, -0x3f, sizeof dist);
+	dist[0] = 0;
+	q[0] = 0;
+	vis[0] = true;
 
-	for (int i = 1; i <= n; i++)
+	while (hh != tt)
 	{
-		q.push(i);
-		vis[i] = true;
-	}
+		int t = q[ -- tt];
+		vis[t] = false;
 
-	while (!q.empty())
-	{
-		int u = q.front();
-		q.pop();
-		vis[u] = false;
-
-		for (int i = head[u]; i; i = e[i].next)
+		for (int i = head[t]; i; i = e[i].next)
 		{
 			int j = e[i].to;
-
-			if (dist[j] > dist[u] + e[i].val)
+			if (dist[j] < dist[t] + e[i].val)
 			{
-				dist[j] = dist[u] + e[i].val;
-				cnt[j] = cnt[u] + 1;
-
-				if (cnt[j] >= n) return false;
-
+				dist[j] = dist[t] + e[i].val;
+				cnt[j] = cnt[t] + 1;
+				if (cnt[j] >= n + 1) return false;
 				if (!vis[j])
 				{
-					q.push(j);
+					q[tt ++ ] = j;
 					vis[j] = true;
 				}
 			}
@@ -66,37 +60,27 @@ bool spfa(int n)
 
 int main()
 {
-	ios::sync_with_stdio(false);
-	cin.tie(nullptr), cout.tie(nullptr);
-
 	int n, m;
-	cin >> n >> m;
+	scanf("%d%d", &n, &m);
 
 	while (m--)
 	{
-		int op;
-		int f, t, v;
-		cin >> op;
-
-		if (op == 1)
-		{
-			cin >> f >> t >> v;
-			add_edge(f, t, -v);
-		}
-		else if (op == 2)
-		{
-			cin >> f >> t >> v;
-			add_edge(t, f, v);
-		}
-		else if (op == 3)
-		{
-			cin >> f >> t;
-			add_edge(f, t, 0);
-			add_edge(t, f, 0);
-		}
+		int x, a, b;
+		scanf("%d%d%d", &x, &a, &b);
+		if (x == 1) add_edge(b, a, 0), add_edge(a, b, 0);
+		else if (x == 2) add_edge(a, b, 1);
+		else if (x == 3) add_edge(b, a, 0);
+		else if (x == 4) add_edge(b, a, 1);
+		else add_edge(a, b, 0);
 	}
 
-	bool res = spfa(n);
-	if (res) cout << "Yes\n";
-	else cout << "No\n";
+	for (int i = 1; i <= n; i++) add_edge(0, i, 1);
+
+	if (!spfa(n)) puts("-1");
+	else
+	{
+		long long res = 0;
+		for (int i = 1; i <= n; i++) res += dist[i];
+		printf("%lld\n", res);
+	}
 }
