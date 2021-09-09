@@ -1,3 +1,3 @@
-SET (LIB_SRCS p3379.cpp)
+SET (LIB_SRCS p6374.cpp)
 
 add_library(Luogu ${LIB_SRCS})
