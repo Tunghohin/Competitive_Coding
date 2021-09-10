@@ -1,8 +1,11 @@
 #include <iostream>
-#include <cstring>
 #include <queue>
 
 using namespace std;
+
+int depth[500010];
+int f[500010][25];
+int size[500010];
 
 struct edge
 {
@@ -17,67 +20,103 @@ void add_edge(int from, int to)
 	head[from] = tot;
 }
 
-int depth[500010];
-int f[500010][20];
-void bfs(int root)
+void dfs(int u, int last)
 {
-	queue<int> q;
-	memset(depth, 0x3f, sizeof(depth));
+	depth[u] = depth[last] + 1;
+	size[u] = 1;
 
-	depth[0] = 0, depth[root] = 1;
-
-	q.push(root);
-
-	while (!q.empty())
-	{
-		int u = q.front();
-		q.pop();
-
-		for (int i = head[u]; i; i = e[i].next)
-		{
-			int j = e[i].to;
-
-			if (depth[j] > depth[u] + 1)
-			{
-				depth[j] = depth[u] + 1;
-				q.push(j);
-
-				f[j][0] = u;
-				for (int k = 1; k <= 15; k++) f[j][k] = f[f[j][k - 1]][k - 1];
-			}
-		}
-	}
-}
-
-int size[500010];
-int dfs(int u)
-{
-	size[u] = 0;
+	f[u][0] = last;
+	for (int i = 1; i <= 15; i++) f[u][i] = f[f[u][i - 1]][i - 1];
 
 	for (int i = head[u]; i; i = e[i].next)
 	{
 		int j = e[i].to;
-		size[u] += dfs(j);
+
+		if (j == last) continue;
+
+		dfs(j, u);
+		size[u] += size[j];
+	}
+}
+
+int lca(int a, int b)
+{
+	if (a == b) return b;
+	if (depth[a] < depth[b]) swap(a, b);
+
+	for (int k = 15; k >= 0; k--)
+	{
+		if (depth[f[a][k]] >= depth[b]) a = f[a][k];
+		if (a == b) return b;
 	}
 
-	return size[u];
+	for (int k = 15; k >= 0; k--)
+	{
+		if (f[a][k] != f[b][k]) a = f[a][k], b = f[b][k];
+	}
+
+	return f[b][0];
+}
+
+int get(int a, int b)
+{
+	if (a == b) return 0;
+
+	for (int k = 15; k >= 0; k--)
+	{
+		if (depth[f[a][k]] > depth[b]) a = f[a][k];
+	}
+
+	return size[a];
+}
+
+int get_dist(int a, int b)
+{
+	return depth[a] + depth[b] - (2 * depth[lca(a, b)]);
 }
 
 int main()
 {
-	ios::sync_with_stdio(false);
-	cin.tie(nullptr), cout.tie(nullptr);
-
 	int n, q;
-	cin >> n >> q;
+	scanf("%d%d", &n, &q);
 
-	for (int i = 1; i < n; i++)
+	for (int i = 1; i <= n - 1; i++)
 	{
 		int fr, to;
-		cin >> fr >> to;
+		scanf("%d%d", &fr, &to);
 		add_edge(fr, to), add_edge(to, fr);
 	}
 
-	bfs(1);
-	dfs(1);
+	dfs(1, 0);
+
+	for (int i = 1; i <= q; i++)
+	{
+		int a, b, c;
+		scanf("%d%d%d", &a, &b, &c);
+
+		int p = lca(a, b);
+
+		if (c == p)
+		{
+			int res =  n - get(a, c) - get(b, c);
+			printf("%d\n", res);
+			continue;
+		}
+
+		if (get_dist(a, c) + get_dist(c, p) == get_dist(a, p))
+		{
+			int res = size[c] - get(a, c);
+			printf("%d\n", res);
+			continue;
+		}
+
+		if (get_dist(b, c) + get_dist(c, p) == get_dist(b, p))
+		{
+			int res = size[c] - get(b, c);
+			printf("%d\n", res);
+			continue;
+		}
+
+		printf("0\n");
+	}
 }
