@@ -1,11 +1,14 @@
 #include <iostream>
 #include <queue>
+#include <cmath>
 
 using namespace std;
 
 int depth[500010];
 int f[500010][25];
 int size[500010];
+
+int log_size;
 
 struct edge
 {
@@ -26,7 +29,7 @@ void dfs(int u, int last)
 	size[u] = 1;
 
 	f[u][0] = last;
-	for (int i = 1; i <= 15; i++) f[u][i] = f[f[u][i - 1]][i - 1];
+	for (int i = 1; i <= log_size; i++) f[u][i] = f[f[u][i - 1]][i - 1];
 
 	for (int i = head[u]; i; i = e[i].next)
 	{
@@ -44,25 +47,25 @@ int lca(int a, int b)
 	if (a == b) return b;
 	if (depth[a] < depth[b]) swap(a, b);
 
-	for (int k = 15; k >= 0; k--)
+	for (int k = log_size; k >= 0; k--)
 	{
 		if (depth[f[a][k]] >= depth[b]) a = f[a][k];
 		if (a == b) return b;
 	}
 
-	for (int k = 15; k >= 0; k--)
+	for (int k = log_size; k >= 0; k--)
 	{
 		if (f[a][k] != f[b][k]) a = f[a][k], b = f[b][k];
 	}
 
-	return f[b][0];
+	return f[a][0];
 }
 
 int get(int a, int b)
 {
 	if (a == b) return 0;
 
-	for (int k = 15; k >= 0; k--)
+	for (int k = log_size; k >= 0; k--)
 	{
 		if (depth[f[a][k]] > depth[b]) a = f[a][k];
 	}
@@ -79,6 +82,8 @@ int main()
 {
 	int n, q;
 	scanf("%d%d", &n, &q);
+
+	log_size = (int)(log(n)/log(2)) + 1;
 
 	for (int i = 1; i <= n - 1; i++)
 	{
