@@ -7,9 +7,8 @@ int din[110], dout[110];
 struct edge
 {
 	int to, next;
-}e[1000010], e_scc[1000010];
+}e[1000010];
 int head[110], tot = 0;
-int head_scc[110], tot_scc = 0;
 
 void add_edge(int from, int to)
 {
@@ -77,8 +76,6 @@ int main()
 		if (!dfn[i]) tarjan(i);
 	}
 
-	int sum = scc_cnt;
-	int res = 0;
 	for (int i = 1; i <= n; i++)
 	{
 		for (int j = head[i]; j; j = e[j].next)
