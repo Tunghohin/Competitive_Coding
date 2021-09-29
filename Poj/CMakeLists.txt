@@ -1,3 +1,3 @@
-SET (LIB_SRCS poj3259.cpp)
+SET (LIB_SRCS poj1502.cpp)
 
 add_library(Poj ${LIB_SRCS})
