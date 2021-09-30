@@ -20,7 +20,7 @@ void add(int x, int k, long long t[], int n)
 	}
 }
 
-long long get_prefix(int x, long long t[])
+long long get_prefix(int x, int const *t)
 {
 	long long res = 0;
 
