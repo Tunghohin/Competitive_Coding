@@ -4,7 +4,6 @@
 #include <cmath>
 #include <queue>
 #include <vector>
-#define nullptr 0
 
 using namespace std;
 
