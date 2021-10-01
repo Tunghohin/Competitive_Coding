@@ -5,9 +5,9 @@ set(CMAKE_CXX_STANDARD 14)
 
 aux_source_directory(. DIR_SRCS)
 
-add_subdirectory(Luogu)
+add_subdirectory(Poj)
 
 add_executable(Competitive_Coding main.cpp)
 
-target_link_libraries(Competitive_Coding Luogu)
+target_link_libraries(Competitive_Coding Poj)
 
