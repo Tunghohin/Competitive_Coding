@@ -1,4 +1,5 @@
 /*
+快读模板
 inline int read()
 {
     int s = 0, w = 1;
