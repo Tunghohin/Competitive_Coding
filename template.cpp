@@ -8,4 +8,14 @@ inline int read()
     while (ch >= '0' && ch <= '9') s = s * 10 + ch - '0', ch = getchar();
     return s * w;
 }
+
+利用hash判重边的trick
+a，b表示起点终点
+long long hash = a * 1000000ll + b;
+
+if (a != b && !S.count(hash))
+{
+	add_edge(a, b);
+	S.insert(hash);
+}
 */
