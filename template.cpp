@@ -9,6 +9,19 @@ inline int read()
     return s * w;
 }
 
+数组离散化
+vector<int> hash;
+map<int, int> hashed;
+sort(hash.begin(), hash.end());
+int cnt = 0;
+for (auto i : hash)
+{
+	if (!hashed.count(i))
+	{
+		hashed[i] = ++cnt;
+	}
+}
+
 利用hash判重边的trick
 a，b表示起点终点
 long long hash = a * 1000000ll + b;
