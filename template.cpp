@@ -1,5 +1,4 @@
-//快读模板 quick read
-
+//快读模板 fast read
 inline int read()
 {
     int s = 0, w = 1;
@@ -10,7 +9,6 @@ inline int read()
 }
 
 //数组离散化 discrete array
-
 vector<int> hash;
 map<int, int> hashed;
 sort(hash.begin(), hash.end());
@@ -25,7 +23,6 @@ for (auto i : hash)
 
 //利用hash判重边 edge de-duplication
 //a，b表示起点终点
-
 long long hash = a * 1000000ll + b;
 
 if (a != b && !S.count(hash))
