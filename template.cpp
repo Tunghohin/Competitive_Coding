@@ -1,5 +1,4 @@
-/*
-快读模板 quick read
+//快读模板 quick read
 
 inline int read()
 {
@@ -10,7 +9,7 @@ inline int read()
     return s * w;
 }
 
-数组离散化 discrete array
+//数组离散化 discrete array
 
 vector<int> hash;
 map<int, int> hashed;
@@ -24,9 +23,9 @@ for (auto i : hash)
 	}
 }
 
-利用hash判重边 edge de-duplication
+//利用hash判重边 edge de-duplication
+//a，b表示起点终点
 
-a，b表示起点终点
 long long hash = a * 1000000ll + b;
 
 if (a != b && !S.count(hash))
@@ -34,4 +33,3 @@ if (a != b && !S.count(hash))
 	add_edge(a, b);
 	S.insert(hash);
 }
-*/
