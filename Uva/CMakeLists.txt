@@ -1,3 +1,3 @@
-SET (LIB_SRCS uva1395.cpp)
+SET (LIB_SRCS uva796.cpp)
 
 add_library(Uva ${LIB_SRCS})
