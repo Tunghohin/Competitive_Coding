@@ -7,6 +7,8 @@ using namespace std;
 const int N = 1010;
 
 bool G[N][N];
+bool meeting_enabled[N];
+
 struct edge
 {
 	int to, next;
@@ -23,7 +25,6 @@ void add_edge(int from ,int to)
 int root;
 int dfn[N], low[N], timestamp = 0;
 int stk[N], top = 0;
-bool enable_meeting[N];
 int bcc_cnt = 0;
 vector<int> bcc[N];
 void tarjan(int u)
@@ -96,7 +97,7 @@ int main()
 		memset(G, false, sizeof(G));
 		memset(dfn, 0, sizeof(dfn));
 		memset(low, 0, sizeof(low));
-		memset(enable_meeting, false, sizeof(enable_meeting));
+		memset(meeting_enabled, false, sizeof(enable_meeting));
 		memset(head, 0, sizeof(head));
 		tot = timestamp = top = bcc_cnt = 0;
 
@@ -129,12 +130,12 @@ int main()
 
 			if (!dfs(bcc[i].front(), 1))
 			{
-				for (auto u : bcc[i]) enable_meeting[u] = true;
+				for (auto u : bcc[i]) meeting_enabled[u] = true;
 			}
 		}
 
 		int res = 0;
-		for (int i = 1; i <= n; i++) if (!enable_meeting[i]) res++;
+		for (int i = 1; i <= n; i++) if (!meeting_enabled[i]) res++;
 
 		cout << res << '\n';
 	}
