@@ -1,3 +1,3 @@
-SET (LIB_SRCS hdu1166.cpp)
+SET (LIB_SRCS hdu4612.cpp)
 
 add_library(Hdu ${LIB_SRCS})
