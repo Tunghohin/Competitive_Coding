@@ -44,29 +44,26 @@ void insert(int x)
 	}
 }
 
-int query(int x)
+int get(int x)
 {
 	int p = 0, res = 0;
 
 	for (int i = 30; i >= 0; i--)
 	{
-		int s = x >> i & 1;
-		if (trie_01[p][s ^ 1])
+		int u = x >> i & 1;
+		if (trie_01[p][u ^ 1])
 		{
 			res += 1 << i;
-			p = trie_01[p][s ^ 1];
+			p = trie_01[p][u ^ 1];
 		}
-		else p = trie_01[p][s];
+		else p = trie_01[p][u];
 	}
 
 	return res;
 }
 
-signed main()
+int main()
 {
-	ios::sync_with_stdio(false);
-	cin.tie(nullptr), cout.tie(nullptr);
-
 	int n;
 	cin >> n;
 
@@ -82,7 +79,7 @@ signed main()
 	for (int i = 1; i <= n; i++) insert(prefix_xor[i]);
 
 	int res = 0;
-	for (int i = 1; i <= n; i++) res = max(res, query(prefix_xor[i]));
+	for (int i = 1; i <= n; i++) res = max(res, get(prefix_xor[i]));
 
 	cout << res << '\n';
 }
