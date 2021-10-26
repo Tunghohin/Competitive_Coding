@@ -12,7 +12,7 @@ bool meeting_enabled[N];
 struct edge
 {
 	int to, next;
-}e[200];
+}e[2000010];
 int head[N], tot = 0;
 
 void add_edge(int from ,int to)
@@ -97,7 +97,7 @@ int main()
 		memset(G, false, sizeof(G));
 		memset(dfn, 0, sizeof(dfn));
 		memset(low, 0, sizeof(low));
-		memset(meeting_enabled, false, sizeof(enable_meeting));
+		memset(meeting_enabled, false, sizeof(meeting_enabled));
 		memset(head, 0, sizeof(head));
 		tot = timestamp = top = bcc_cnt = 0;
 
