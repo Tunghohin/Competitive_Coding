@@ -28,8 +28,8 @@ void dfs(int u, int from)
 		int j = e[i].to;
 		if (j == from) continue;
 
-		dfs(j, u);
 		prefix_xor[j] = prefix_xor[u] ^ e[i].val;
+		dfs(j, u);
 	}
 }
 
@@ -44,26 +44,29 @@ void insert(int x)
 	}
 }
 
-int get(int x)
+int query(int x)
 {
 	int p = 0, res = 0;
 
 	for (int i = 30; i >= 0; i--)
 	{
-		int u = x >> i & 1;
-		if (trie_01[p][u ^ 1])
+		int s = x >> i & 1;
+		if (trie_01[p][s ^ 1])
 		{
 			res += 1 << i;
-			p = trie_01[p][u ^ 1];
+			p = trie_01[p][s ^ 1];
 		}
-		else p = trie_01[p][u];
+		else p = trie_01[p][s];
 	}
 
 	return res;
 }
 
-int main()
+signed main()
 {
+	ios::sync_with_stdio(false);
+	cin.tie(nullptr), cout.tie(nullptr);
+
 	int n;
 	cin >> n;
 
@@ -79,7 +82,7 @@ int main()
 	for (int i = 1; i <= n; i++) insert(prefix_xor[i]);
 
 	int res = 0;
-	for (int i = 1; i <= n; i++) res = max(res, get(prefix_xor[i]));
+	for (int i = 1; i <= n; i++) res = max(res, query(prefix_xor[i]));
 
 	cout << res << '\n';
 }
