@@ -53,7 +53,6 @@ void solve()
 	int flag = false;
 	int found_bit = false;
 	int gcd;
-	int last = 0;
 	for (int i = 30; i >= 0; i--)
 	{
 		if (!cnt[i]) continue;
