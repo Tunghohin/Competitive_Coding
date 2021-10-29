@@ -76,7 +76,6 @@ int main()
 
 	root[0] = build(1, n);
 
-	int tot_ver = 0;
 	for (int i = 1; i <= m; i++)
 	{
 		int ver, op, loc;
