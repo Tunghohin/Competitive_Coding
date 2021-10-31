@@ -4,7 +4,7 @@
 
 using namespace std;
 
-const int N = 100;
+const int N = 100010;
 
 int val[N];
 vector<int> nums;
@@ -153,7 +153,7 @@ int main()
 		u ^= last;
 		int lca = __lca(u, v);
 
-		last = nums[get_k_th(root[u], root[v], root[lca], root[f[lca][0]], 0, (int)nums.size() - 1, k)];
+		last = nums[get_k_th(root[u], root[v], root[lca], root[f[lca][0]], 0, nums.size() - 1, k)];
 		cout << last << '\n';
 	}
 }
