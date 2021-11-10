@@ -1,68 +1,53 @@
 #include <iostream>
-#include <vector>
+#include <queue>
 #include <algorithm>
+#include <vector>
 #include <cstring>
+#include <cmath>
 
 using namespace std;
 
-bool cmp(int x, int y)
+int u_id[200010];
+int skill[200010];
+
+void solve()
 {
-	return x > y;
+	int n;
+	scanf("%d", &n);
+
+	for (int i = 1; i <= n; i++) scanf("%d", &u_id[i]);
+	for (int i = 1; i <= n; i++) scanf("%d", &skill[i]);
+
+	vector<vector<int>> v(n + 10);
+	for (int i = 1; i <= n; i++) v[u_id[i]].push_back(skill[i]);
+	for (int i = 1; i <= n; i++) sort(v[i].begin(), v[i].end(), greater<int>());
+
+	vector<vector<long long>> s(n + 10, vector<long long>(1, 0));
+	for (int i = 1; i <= n; i++)
+	{
+		for (auto u : v[i]) s[i].push_back(s[i].back() + u);
+	}
+
+	vector<long long> res(n + 10);
+	for (int i = 1; i <= n; i++)
+	{
+		for (int k = 1; k <= int(v[i].size()); k++)
+		{
+			res[k] += s[i][v[i].size() / k * k];
+		}
+	}
+
+	for (int i = 1; i <= n; i++) printf("%lld ", res[i]);
+	printf("\n");
 }
 
 int main()
 {
-	ios::sync_with_stdio(false);
-	cin.tie(nullptr), cout.tie(nullptr);
-
 	int T;
-	cin >> T;
+	scanf("%d", &T);
 
 	while (T--)
 	{
-		int n;
-		cin >> n;
-
-		vector<int> u(n), s(n);
-
-		for (int i = 0; i < n; i++)
-		{
-			cin >> u[i];
-			u[i]--;
-		}
-		for (int i = 0; i < n; i++)
-		{
-			cin >> s[i];
-		}
-
-		vector<vector<int>> u_s(n);
-
-		for (int i = 0; i < n; i++) u_s[u[i]].push_back(s[i]);
-
-		for (int i = 0; i < n; i++) sort(u_s[i].begin(), u_s[i].end(), cmp);
-
-		vector<vector<long long>> pre_fix(n, vector<long long>(1, 0));
-
-		for (int i = 0; i < n; i++)
-		{
-			for (auto x : u_s[i])
-			{
-				pre_fix[i].push_back(pre_fix[i].back() + x);
-			}
-		}
-
-		vector<long long> ans(n);
-
-		for (int i = 0; i < n; i++)
-		{
-			for (int k = 1; k <= int(u_s[i].size()); k++)
-			{
-				ans[k - 1] += pre_fix[i][u_s[i].size() / k * k];
-			}
-		}
-
-		for (auto i : ans) cout << i << '\n';
-
-		cout << '\n';
+		solve();
 	}
 }
