@@ -2,7 +2,7 @@
 
 using namespace std;
 
-const int N = 1010;//500010
+const int N = 510;//500010
 
 struct Node
 {
