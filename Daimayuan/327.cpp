@@ -19,7 +19,7 @@ void solve()
 
 	for (int i = 1; i <= n; i++)
 	{
-		for (int j = i; j <= n; j++)
+		for (int j = 1; j <= n; j++)
 		{
 			for (int k = 1; k <= n; k++)
 			{
@@ -30,9 +30,9 @@ void solve()
 
 	for (int length = 0; length < n; length++)
 	{
-		for (int l = 1; l + length <= n; l++)
+		for (int i = 1; i + length <= n; i++)
 		{
-			int r = l + length;
+			int l = i, r = i + length;
 			if (length == 0)
 			{
 				dp[l][r][1] = 0;
@@ -45,6 +45,7 @@ void solve()
 					{
 						dp[l][r][k] = min(dp[l][r][k], dp[l][mid][1] + dp[mid + 1][r][k - 1]);
 					}
+
 					if (k >= L && k <= R) dp[l][r][1] = min(dp[l][r][1], dp[l][r][k]);
 				}
 				dp[l][r][1] += s[r] - s[l - 1];
@@ -52,8 +53,8 @@ void solve()
 		}
 	}
 
-	if (dp[1][n][1] >= 0x3f3f3f3f) cout << 0 << '\n';
-	else cout << dp[1][n][1] << '\n';
+	if (dp[1][n][1] < 0x3f3f3f3f / 2) cout << dp[1][n][1] << '\n';
+	else cout << 0 << '\n';
 }
 
 int main()
