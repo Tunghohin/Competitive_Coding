@@ -122,6 +122,7 @@ signed main()
 			dp[S][i] = p_bike * no_bike + (1.0 - p_bike) * bike;
 		}
 	}
+
 	double res = (double)d[0][k + 1] / (double)t;
 	for (int i = 1; i <= k; i++)
 	{
