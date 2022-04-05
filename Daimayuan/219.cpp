@@ -6,6 +6,7 @@ const int N = 510;
 
 int n, m;
 int val[N];
+int size[N];
 long long dp[N][N][2];
 
 struct edge
@@ -23,22 +24,35 @@ void add_edge(int from, int to)
 
 void dfs(int u)
 {
+	size[u] = 0;
+	static long long tmp[N + 10][2];
+
 	for (int i = head[u]; i; i = e[i].next)
 	{
 		int t = e[i].to;
-
 		dfs(t);
-		for (int j = m; j >= 0; j--)
+
+		for (int j = 0; j <= N; j++) tmp[j][0] = tmp[j][1] = 0;
+
+		for (int j = 0; j <= size[u]; j++)
 		{
-			for (int k = 0; k <= j; k++)
+			for (int k = 0; k <= size[t]; k++)
 			{
-				dp[u][j][0] = max(dp[u][j][0], dp[u][j - k][0] + max(dp[t][k][0], dp[t][k][1]));
-				dp[u][j][1] = max(dp[u][j][1], dp[u][j - k][1] + dp[t][k][0]);
+				tmp[j + k][0] = max(tmp[j + k][0], dp[u][j][0] + max(dp[t][k][0], dp[t][k][1]));
+				tmp[j + k][1] = max(tmp[j + k][1], dp[u][j][1] + dp[t][k][0]);
 			}
 		}
+
+		for (int j = 0; j <= size[u] + size[t]; j++)
+		{
+			dp[u][j][0] = tmp[j][0];
+			dp[u][j][1] = tmp[j][1];
+		}
+		size[u] += size[t];
 	}
-	for (int j = m; j >= 1; j--) dp[u][j][1] = dp[u][j - 1][1] + val[u];
-	dp[u][0][1] = dp[u][0][0] = 0;
+
+	size[u] += 1;
+	for (int j = size[u]; j >= 1; j--) dp[u][j][1] = dp[u][j - 1][1] + val[u];
 }
 
 int main()
