@@ -38,7 +38,7 @@ int main(){
 	for (int i = 1; i <= q; i++) {
 		unsigned int l = rng61() % n + 1, r = rng61() % n + 1;
 		if (l > r) swap(l, r);
-		int len = 31 - __builtin_clz(r - l + 1);
+		int len = __lg(r - l + 1);
 		res ^= max(spt[l][len], spt[r - (1 << len) + 1][len]);
 	}
 
