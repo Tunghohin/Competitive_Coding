@@ -2,17 +2,20 @@
 
 using namespace std;
 
+typedef unsigned int uint;
+typedef unsigned long long ull;
+
 int main()
 {
-	long long n;
+	ull n;
 	cin >> n;
 
-	long long res = n * n;
-	for (long long l = 1; l <= n; l++)
+	ull res = n * n;
+	for (ull l = 1; l <= n; l++)
 	{
-		long long d = n / l, r = n / d;
+		ull d = n / l, r = n / d;
 		res -= d * (r - l + 1) * (r + l) / 2;
 		l = r;
 	}
-	cout << res << '\n';
+	cout << res % (1ll << 60) << '\n';
 }
