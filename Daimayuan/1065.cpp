@@ -1,3 +1,4 @@
+//拆点法
 #include <iostream>
 #include <limits>
 #include <queue>
@@ -118,39 +119,40 @@ int main()
 		}
 		maxn = max(maxn, dp[i]);
 	}
+	cout << maxn << '\n';
 
-	int s = n + 1, t = n + 2;
+	int s = 2 * n + 1, t = 2 * n + 2;
 	g1.init(s, t, t);
 	g2.init(s, t, t);
+	for (int i = 1; i <= n; i++)
+	{
+		if (dp[i] == 1)
+		{
+			g1.add_edge(s, i, n);
+			g2.add_edge(s, i, n);
+		}
+		if (dp[i] == maxn)
+		{
+			g1.add_edge(i + n, t, n);
+			g2.add_edge(i + n, t, n);
+		}
+		g1.add_edge(i, i + n, 1);
+		if ((i != 1 && i != n) || maxn == 1) g2.add_edge(i, i + n, 1);
+		else g2.add_edge(i, i + n, n);
+	}
 
 	for (int i = 1; i <= n; i++)
 	{
 		for (int j = i + 1; j <= n; j++)
 		{
-			if ((a[i] <= a[j]) && (dp[i] + 1 == dp[j]))
+			if (a[i] <= a[j] && dp[i] + 1 == dp[j])
 			{
-				g1.add_edge(i, j, 1);
-				g2.add_edge(i, j, 1);
+				g1.add_edge(i + n, j, 1);
+				g2.add_edge(i + n, j, 1);
 			}
 		}
 	}
 
-	for (int i = 1; i <= n; i++)
-	{
-		if (dp[i] == 1)
-		{
-			g1.add_edge(s, i, 1);
-			g2.add_edge(s, i, n);
-		}
-		if (dp[i] == maxn)
-		{
-			g1.add_edge(i, t, 1);
-			g2.add_edge(i, t, n);
-		}
-	}
-
-	cout << maxn << '\n';
 	cout << g1.dinic() << '\n';
-	if (maxn == 1) cout << n << '\n';
-	else cout << g2.dinic() << '\n';
+	cout << g2.dinic() << '\n';
 }
