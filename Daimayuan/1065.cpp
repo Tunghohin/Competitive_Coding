@@ -5,8 +5,6 @@
 
 using namespace std;
 
-int nn, mm;
-
 const int N = 100100;
 const int E = 101000;
 template<typename T>
