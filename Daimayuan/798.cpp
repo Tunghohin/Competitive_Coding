@@ -94,5 +94,5 @@ int main()
 		}
 	}
 
-	cout << g.match();
+	cout << g.match() * 2;
 }
