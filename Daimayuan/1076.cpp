@@ -1,8 +1,6 @@
-#include <sstream>
 #include <iostream>
 #include <queue>
 #include <limits>
-#include <vector>
 
 using namespace std;
 
@@ -11,15 +9,16 @@ const int N = 1010;
 const int E = 200010;
 template<typename T>
 class FlowGraph {
-public:
+private:
 	int s, t, v_cnt;
-	struct edg
+	struct edge
 	{
 		int to, next;
 		T f;
 	}e[E * 2];
 	int head[N], tot = 0;
 	int cur[N], dis[N];
+	int sz;
 
 	int inv_edge(int x)
 	{
@@ -79,11 +78,12 @@ public:
 		e[++tot] = {from, head[to], 0}; head[to] = tot;
 	}
 
-	void init(int s_, int t_, int v_cnt_)
+	void init(int s_, int t_, int v_cnt_, int sz_)
 	{
 		s = s_;
 		t = t_;
 		v_cnt = v_cnt_;
+		sz = sz_;
 		tot = 0;
 		for (int i = 1; i <= v_cnt + 2; i++) head[i] = 0;
 	}
@@ -97,70 +97,67 @@ public:
 };
 
 FlowGraph<long long> g;
-vector<int> expm[53];
-vector<int> inst_cost(53);
+
+int nat[110][110];
+int sci[110][110];
+int ud_nat[110][110];
+int ud_sci[110][110];
+int lr_nat[110][110];
+int lr_sci[110][110];
 int main()
 {
-	ios::sync_with_stdio(false);
-	cin.tie(nullptr), cout.tie(nullptr);
+	int n, m;
+	cin >> n >> m;
 
-	int m, n;
-	cin >> m >> n;
+	int s = n * m + 1, t = s + 1;
+	g.init(s, t, t, n * m);
 
-	int s = n + m + 1, t = s + 1;
-	g.init(s, t, t);
-
-	string str;
-	getline(cin, str);
-	for (int i = 1; i <= m; i++)
+	int sum = 0;
+	for (int i = 1; i <= n; i++)
 	{
-		getline(cin, str);
-		stringstream ss;
-		ss << str;
-
-		while (!ss.eof())
+		for (int j = 1; j <= m; j++)
 		{
-			int x;
-			ss >> x;
-			expm[i].push_back(x);
-		}
-	}
-	for (int i = 1; i <= n; i++) cin >> inst_cost[i];
-
-	long long tot = 0;
-	for (int i = 1; i <= m; i++)
-	{
-		bool flag = false;
-		for (auto u : expm[i])
-		{
-			if (!flag)
-			{
-				tot += u;
-				g.add_edge(s, i, u);
-				flag = true;
-			}
-			else
-			{
-				g.add_edge(i, m + u, inf);
-			}
+			cin >> nat[i][j];
+			sum += nat[i][j];
 		}
 	}
 
 	for (int i = 1; i <= n; i++)
 	{
-		g.add_edge(i + m, t, inst_cost[i]);
+		for (int j = 1; j <= m; j++)
+		{
+			cin >> sci[i][j];
+			sum += sci[i][j];
+		}
 	}
 
-	long long res = tot - g.dinic();
-	for (int i = 1; i <= m; i++)
+	for (int i = 1; i < n; i++)
 	{
-		if (g.dis[i]) cout << i << ' ';
+		for (int j = 1; j <= m; j++)
+		{
+			cin >> ud_nat[i][j];
+			sum += ud_nat[i][j];
+		}
 	}
-	cout << '\n';
+
 	for (int i = 1; i <= n; i++)
 	{
-		if (g.dis[i + m]) cout << i << ' ';
+		for (int j = 1; j < m; j++)
+		{
+			cin >> lr_nat[i][j];
+			sum += lr_nat[i][j];
+		}
 	}
-	cout << '\n';
-	cout << res << '\n';
+
+	for (int i = 1; i <= n; i++)
+	{
+		for (int j = 1; j <= n; j++)
+		{
+			int id = n * (i - 1) + j;
+			if ((i + j) % 2)
+			{
+
+			}
+		}
+	}
 }
