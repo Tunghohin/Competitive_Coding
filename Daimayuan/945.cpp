@@ -1,120 +1,118 @@
 #include <iostream>
-#include <set>
 #include <vector>
 
 using namespace std;
 
-const int N = 100010;
+const int N = 1000010;
+const int M = N;
+int n, m;
+int MOD;
 
-int p;
-vector<int> G[N];
-vector<int> DAG[N];
-
-int dfn[N], low[N], timestamp = 0;
-int scc_cnt, scc_id[N], scc_size[N];
-int stk[N], top = 0;
-bool in_stk[N];
-void tarjan(int u)
+template<typename T>
+class graph
 {
-	dfn[u] = low[u] = ++timestamp;
-	stk[++top] = u, in_stk[u] = true;
-
-	for (auto to : G[u])
+private:
+	struct edge
 	{
-		if (!dfn[to])
+		int to, next;
+	}e[M];
+	int head[N], tot;
+
+public:
+	void add_edge(int from, int to)
+	{
+		e[++tot] = {to, head[from]}; head[from] = tot;
+	}
+
+	int scc_id[N];
+	int scc_cnt = 0;
+	int dfn[N], low[N], timestamp = 0;
+	int stk[N], top = 0;
+	bool in_stk[N];
+	vector<int> SCC[N];
+	void tarjan(int u)
+	{
+		dfn[u] = low[u] = ++timestamp;
+		stk[++top] = u, in_stk[u] = true;
+
+		for (int i = head[u]; i; i = e[i].next)
 		{
-			tarjan(to);
-			low[u] = min(low[u], low[to]);
+			int v = e[i].to;
+			if (!dfn[v])
+			{
+				tarjan(v);
+				low[u] = min(low[u], low[v]);
+			}
+			else if (in_stk[v]) low[u] = min(low[u], dfn[v]);
 		}
 
-		if (in_stk[to]) low[u] = min(low[u], dfn[to]);
+		if (dfn[u] == low[u])
+		{
+			++scc_cnt;
+			int x;
+			do {
+				x = stk[top--];
+				scc_id[x] = scc_cnt;
+				in_stk[x] = false;
+				SCC[scc_cnt].push_back(x);
+			} while (x != u);
+		}
 	}
 
-	if (dfn[u] == low[u])
+	int dp[N], way_cnt[N];
+	bool vis[N];
+	void get_res()
 	{
-		++scc_cnt;
-		int x;
+		for (int i = 1; i <= n; i++)
+		{
+			if (!dfn[i]) tarjan(i);
+		}
 
-		do {
-			x = stk[top--];
-			in_stk[x] = false;
-			scc_id[x] = scc_cnt;
-			scc_size[scc_cnt]++;
-		} while (x != u);
+		int ans = 0, cnt = 0;
+		for (int i = 1; i <= scc_cnt; i++)
+		{
+			way_cnt[i] = 1;
+			dp[i] = 0;
+			for (auto u : SCC[i])
+			{
+				for (int j = head[u]; j; j = e[j].next)
+				{
+					int v = e[j].to;
+					if (!vis[scc_id[v]] && scc_id[v] != i)
+					{
+						vis[scc_id[v]] = true;
+						if (dp[scc_id[v]] > dp[i]) dp[i] = dp[scc_id[v]], way_cnt[i] = 0;
+						if (dp[scc_id[v]] == dp[i]) way_cnt[i] = (way_cnt[i] + way_cnt[scc_id[v]]) % MOD;
+					}
+				}
+			}
+			dp[i] += SCC[i].size();
+			if (dp[i] > ans) ans = dp[i], cnt = 0;
+			if (dp[i] == ans) cnt = (cnt + way_cnt[i]) % MOD;
+			for (auto u : SCC[i])
+			{
+				for (int j = head[u]; j; j = e[j].next) vis[scc_id[e[j].to]] = false;
+			}
+		}
+
+		cout << ans << '\n' << cnt << '\n';
 	}
-}
+};
+graph<int> g;
 
-int sz[N], cnt[N];
 int main()
 {
 	ios::sync_with_stdio(false);
 	cin.tie(nullptr), cout.tie(nullptr);
 
-	int n, m;
-	cin >> n >> m >> p;
+	cin >> n >> m >> MOD;
 
 	for (int i = 1; i <= m; i++)
 	{
-		int a, b;
-		cin >> a >> b;
-		G[a].push_back(b);
+		int u, v;
+		cin >> u >> v;
+		g.add_edge(u, v);
 	}
 
-	for (int i = 1; i <= n; i++)
-	{
-		if (!dfn[i]) tarjan(i);
-	}
-
-	set<long long> S;
-	for (int i = 1; i <= n; i++)
-	{
-		for (auto to : G[i])
-		{
-			int a = scc_id[i], b = scc_id[to];
-			long long hash = (100000ll * (long long)a) + b;
-			if (a != b && !S.count(hash))
-			{
-				DAG[a].push_back(b);
-				S.insert(hash);
-			}
-		}
-	}
-
-	for (int i = scc_cnt; i >= 1; i--)
-	{
-		if (!sz[i])
-		{
-			sz[i] = scc_size[i];
-			cnt[i] = 1;
-		}
-
-		for (auto to : DAG[i])
-		{
-			if (sz[to] < sz[i] + scc_size[to])
-			{
-				sz[to] = sz[i] + scc_size[to];
-				cnt[to] = cnt[i];
-			}
-			else if (sz[to] == sz[i] + scc_size[to])
-			{
-				cnt[to] = (cnt[to] + cnt[i]) % p;
-			}
-		}
-	}
-
-	int mx_sz = -1, mx_cnt = 0;
-	for (int i = 1; i <= scc_cnt; i++)
-	{
-		if (sz[i] > mx_sz)
-		{
-			mx_sz = sz[i];
-			mx_cnt = cnt[i];
-		}
-		else if (mx_sz == sz[i])
-		{
-			mx_cnt = (mx_cnt + cnt[i]) % p;
-		}
-	}
-
-	cout << mx_sz << ' ' << mx_cnt % p << '\n';
+	g.get_res();
 }
