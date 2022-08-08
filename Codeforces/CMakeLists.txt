@@ -1,3 +1,3 @@
-SET (LIB_SRCS cf1691_C.cpp)
+SET (LIB_SRCS cf1711_B.cpp)
 
 add_library(Codeforces ${LIB_SRCS})
