@@ -47,7 +47,7 @@ void get_path(int u)
 			get_path(v);
 		}
 	}
-	path_b.push_back(u);
+	if (found_path) path_b.push_back(u);
 }
 
 void solve()
