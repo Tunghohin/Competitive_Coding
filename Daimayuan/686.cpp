@@ -1,101 +1,97 @@
 #include <iostream>
 #include <algorithm>
 #include <vector>
-#include <unordered_map>
+#include <array>
 
 using namespace std;
 
-const int N = 500010;
+int n, m;
+const int N = 200010;
 
 template<typename T>
-class binary_index_tree
-{
+class binary_index_tree {
 private:
-	int m_size;
 	T tr[N];
+	int m_size;
 
-	int low_bit(int num)
+	int low_bit(int x)
 	{
-		return num & (-num);
+		return x & (-x);
 	}
-
 public:
-	void init(int size)
+	void init(int sz)
 	{
-		m_size = size;
+		m_size = sz;
 	}
-
-	void modify(int idx, T v)
+	void modify(int x, T v)
 	{
-		for (; idx <= m_size; idx += low_bit(idx))
+		for (; x <= m_size; x += low_bit(x))
 		{
-			tr[idx] += v;
+			tr[x] += v;
 		}
 	}
-
-	T query(int idx)
+	T query(int x)
 	{
-		T res = 0;
-		for(; idx; idx -= low_bit(idx))
+		T res;
+		for (; x; x -= low_bit(x))
 		{
-			res += tr[idx];
+			res += tr[x];
 		}
-
 		return res;
 	}
 };
 
-long long ans[N];
-vector<int> vx;
+//pos type modify_pos pid
+//type 0->add, 1->query_sub, 2->query_add
+long long res[N];
 vector<array<int, 4>> event;
+vector<int> hashed;
 binary_index_tree<long long> tr;
 int main()
 {
 	ios::sync_with_stdio(false);
 	cin.tie(nullptr), cout.tie(nullptr);
 
-	int n, q;
-	cin >> n >> q;
+	cin >> n >> m;
+
 	for (int i = 1; i <= n; i++)
 	{
 		int x, y;
 		cin >> x >> y;
-		vx.push_back(x);
-		event.push_back({y, 0, x});
-	}
-	for (int i = 1; i <= q; i++)
-	{
-		int x1, x2, y1, y2;
-		cin >> x1 >> y1 >> x2 >> y2;
-		event.push_back({y2, 2, x2, i});
-		event.push_back({y1 - 1, 2, x1 - 1, i});
-		event.push_back({y2, 1, x1 - 1, i});
-		event.push_back({y1 - 1, 1, x2, i});
+		hashed.push_back(y);
+		event.push_back({x, 0, y, 2});
 	}
 
+	for (int i = 1; i <= m; i++)
+	{
+		int x1, x2, y1, y2;
+		cin >> x1 >> x2 >> y1 >> y2;
+		event.push_back({x2, 2, y2, i});
+		event.push_back({x1 - 1, 2, y1 - 1, i});
+		event.push_back({x2, 1, y1 - 1, i});
+		event.push_back({x1 - 1, 1, y2, i});
+	}
+
+	sort(hashed.begin(), hashed.end());
+	hashed.erase(unique(hashed.begin(), hashed.end()), hashed.end());
 	sort(event.begin(), event.end());
-	sort(vx.begin(), vx.end());
-	vx.erase(unique(vx.begin(), vx.end()), vx.end());
-	tr.init((int)vx.size());
+	tr.init(hashed.size());
 
 	for (auto evt : event)
 	{
 		if (evt[1] == 0)
 		{
-			int y = lower_bound(vx.begin(), vx.end(), evt[2]) - vx.begin() + 1;
+			int y = lower_bound(hashed.begin(), hashed.end(), evt[2]) - hashed.begin() + 1;
 			tr.modify(y, 1);
 		}
 		else
 		{
-			int y = upper_bound(vx.begin(), vx.end(), evt[2]) - vx.begin();
-			int tmp = tr.query(y);
-			if (evt[1] == 1) ans[evt[3]] -= tmp;
-			else ans[evt[3]] += tmp;
+			int y = upper_bound(hashed.begin(), hashed.end(), evt[2]) - hashed.begin();
+			long long tmp = tr.query(y);
+			if (evt[1] == 1) res[evt[3]] -= tmp;
+			else res[evt[3]] += tmp;
 		}
 	}
 
-	for (int i = 1; i <= q; i++)
-	{
-		cout << ans[i] << '\n';
-	}
+	for (int i = 1; i <= m; i++) cout << res[i] << '\n';
 }
