@@ -1,51 +1,67 @@
 #include <iostream>
+#include <vector>
+#include <algorithm>
 
 using namespace std;
+using LL = long long;
 
 const int N = 2010;
 
-int size[N];
 int val[N];
+int sz[N];
 long long dp[N][N];
-
-struct edge
-{
-	int to, next;
-}e[2 * N];
-int head[N], tot = 0;
-
-void add_edge(int from, int to)
-{
-	e[++tot].to = to;
-	e[tot].next = head[from];
-	head[from] = tot;
-}
+vector<int> G[N];
 
 void dfs(int u)
 {
-	size[u] = 0;
-	static long long tmp[N];
-	for (int i = head[u]; i; i = e[i].next)
-	{
-		int to = e[i].to;
-		dfs(to);
-		for (int j = 0; j <= size[u] + size[to]; j++) tmp[j] = -0x3f3f3f3f;
+	sz[u] = 0;
+	static LL tmp[N];
 
-		for (int j = 0; j <= size[u]; j++)
+	for (auto v : G[u])
+	{
+		dfs(v);
+
+		for (int i = 0; i <= sz[u] + sz[v]; i++) tmp[i] = -0x3f3f3f3f;
+
+		for (int i = 0; i <= sz[u]; i++)
 		{
-			for (int k = 0; k <= size[to]; k++)
+			for (int j = 0; j <= sz[v]; j++)
 			{
-				tmp[j + k] = max(tmp[j + k], dp[u][j] + dp[to][k]);
+				tmp[i + j] = max(tmp[i + j], dp[u][i] + dp[v][j]);
 			}
 		}
 
-		for (int j = 0; j <= size[u] + size[to]; j++) dp[u][j] = tmp[j];
-		size[u] += size[to];
+		for (int i = 0; i <= sz[u] + sz[v]; i++) dp[u][i] = tmp[i];
+		sz[u] += sz[v];
 	}
 
-	size[u] += 1;
-	for (int i = size[u]; i >= 1; i--) dp[u][i] = dp[u][i - 1] + val[u];
+	sz[u]++;
+	for (int i = sz[u]; i >= 1; i--) dp[u][i] = dp[u][i - 1] + val[u];
 	dp[u][0] = 0;
+}
+
+void solve()
+{
+	int n, q;
+	cin >> n >> q;
+
+	for (int i = 2; i <= n; i++)
+	{
+		int x;
+		cin >> x;
+		G[x].push_back(i);
+	}
+
+	for (int i = 1; i <= n; i++) cin >> val[i];
+
+	dfs(1);
+
+	for (int i = 1; i <= q; i++)
+	{
+		int x, y;
+		cin >> x >> y;
+		cout << dp[x][y] << '\n';
+	}
 }
 
 int main()
@@ -53,24 +69,5 @@ int main()
 	ios::sync_with_stdio(false);
 	cin.tie(nullptr), cout.tie(nullptr);
 
-	int n, m;
-	cin >> n >> m;
-
-	for (int i = 2; i <= n; i++)
-	{
-		int x;
-		cin >> x;
-		add_edge(x, i);
-	}
-
-	for (int i = 1; i <= n; i++) cin >> val[i];
-
-	dfs(1);
-
-	for (int i = 1; i <= m; i++)
-	{
-		int qx, qm;
-		cin >> qx >> qm;
-		cout << dp[qx][qm] << '\n';
-	}
-}
+	solve();
+} 

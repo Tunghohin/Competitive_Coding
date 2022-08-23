@@ -32,7 +32,7 @@ public:
 	}
 	T query(int x)
 	{
-		T res;
+		T res = 0;
 		for (; x; x -= low_bit(x))
 		{
 			res += tr[x];
