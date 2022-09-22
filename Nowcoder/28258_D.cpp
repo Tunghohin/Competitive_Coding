@@ -14,18 +14,18 @@ void dfs(int u, int from)
 	dp[u][0] = 1;
 	dp[u][1] = 0;
 	dp[u][2] = 0;
-	bool has_child = false;
 	bool flag = false;
+	bool has_child = false;
 	int min_dif = 0x3f3f3f3f;
 	for (auto v : G[u])
 	{
 		if (v == from) continue;
-
 		dfs(v, u);
 
 		has_child = true;
 		dp[u][0] += min({dp[v][0], dp[v][1], dp[v][2]});
 		dp[u][2] += min(dp[v][0], dp[v][1]);
+
 		if (dp[v][0] <= dp[v][1])
 		{
 			flag = true;

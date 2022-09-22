@@ -21,7 +21,7 @@ void dfs(int u)
 	{
 		dfs(v);
 
-		for (int i = 0; i <= sz[u] + sz[v]; i++) tmp[i] = -0x3f3f3f3f;
+		for (int i = 0; i <= sz[u] + sz[v]; i++) tmp[i] = 0x3f3f3f3f;
 
 		for (int i = 0; i <= sz[u]; i++)
 		{

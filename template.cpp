@@ -8,6 +8,12 @@ inline int read()
     return s * w;
 }
 
+inline void write(long long a)
+{
+	if (a > 9) write(a / 10);
+	putchar(a % 10 + '0');
+}
+
 //数组离散化 discrete array
 vector<int> hash;
 map<int, int> hashed;
@@ -24,9 +30,21 @@ for (auto i : hash)
 //利用hash判重边 edge de-duplication
 //a，b表示起点终点
 long long hash = a * 1000000ll + b;
-
 if (a != b && !S.count(hash))
 {
 	add_edge(a, b);
 	S.insert(hash);
 }
+
+
+//hash pair
+struct hash_pair
+{
+	template<class T1, class T2>
+	size_t operator()(const pair<T1, T2> &p) const
+	{
+		auto hash1 = hash<T1>{}(p.first);
+		auto hash2 = hash<T2>{}(p.second);
+		return hash1 ^ hash2;
+	}
+};

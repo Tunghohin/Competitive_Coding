@@ -1,58 +1,46 @@
 #include <iostream>
+#include <vector>
 
 using namespace std;
+using LL = long long;
 
-const int N = 50010;
+const int N = 500010;
 
-int size[N];
+vector<int> G[N];
 int val[N];
-long long dp[N][110];
-
-struct edge
-{
-	int to, next;
-}e[2 * N];
-int head[N], tot = 0;
-
-void add_edge(int from, int to)
-{
-	e[++tot].to = to;
-	e[tot].next = head[from];
-	head[from] = tot;
-}
+int sz[N];
+LL dp[N][110];
 
 void dfs(int u)
 {
-	size[u] = 0;
-	static long long tmp[100];
-	for (int i = head[u]; i; i = e[i].next)
-	{
-		int to = e[i].to;
-		dfs(to);
-		for (int j = 0; j <= 200; j++) tmp[j] = -0x3f3f3f3f;
+	sz[u] = 0;
+	static LL tmp[110];
 
-		for (int j = 0; j <= 100 && j <= size[u]; j++)
+	for (auto v : G[u])
+	{
+		dfs(v);
+
+		for (int i = 0; i <= 100 && i <= sz[u] + sz[v]; i++) tmp[i] = -0x3f3f3f3f;
+
+		for (int i = 0; i <= 100 && i <= sz[u]; i++)
 		{
-			for (int k = 0; j + k <= 100 && k <= size[to]; k++)
+			for (int j = 0; i + j <= 100 && j <= sz[v]; j++)
 			{
-				tmp[j + k] = max(tmp[j + k], dp[u][j] + dp[to][k]);
+				tmp[i + j] = max(tmp[i + j], dp[u][i] + dp[v][j]);
 			}
 		}
 
-		for (int j = 0; j <= 100; j++) dp[u][j] = tmp[j];
-		size[u] += size[to];
+		for (int i = 0; i <= 100 && i <= sz[u] + sz[v]; i++) dp[u][i] = tmp[i];
+		sz[u] += sz[v];
 	}
 
-	size[u] += 1;
-	for (int i = 100; i >= 1; i--) dp[u][i] = dp[u][i - 1] + val[u];
-	dp[u][0] = 0;
+	sz[u]++;
+	for (int i = min(sz[u], 100); i >= 1; i--) dp[u][i] = dp[u][i - 1] + val[u];
+	dp[u][0] = 0; 
 }
 
-int main()
+void solve()
 {
-	ios::sync_with_stdio(false);
-	cin.tie(nullptr), cout.tie(nullptr);
-
 	int n, q;
 	cin >> n >> q;
 
@@ -60,7 +48,7 @@ int main()
 	{
 		int x;
 		cin >> x;
-		add_edge(x, i);
+		G[x].push_back(i);
 	}
 
 	for (int i = 1; i <= n; i++) cin >> val[i];
@@ -69,8 +57,17 @@ int main()
 
 	for (int i = 1; i <= q; i++)
 	{
-		int qx, qm;
-		cin >> qx >> qm;
-		cout << dp[qx][qm] << '\n';
+		int a, b;
+		cin >> a >> b;
+
+		cout << dp[a][b] << '\n';
 	}
+}
+
+int main()
+{
+	ios::sync_with_stdio(false);
+	cin.tie(nullptr), cout.tie(nullptr);
+
+	solve();
 }
