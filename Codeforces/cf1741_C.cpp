@@ -56,4 +56,4 @@ int main()
 	{
 		solve();
 	}
-}
+}  

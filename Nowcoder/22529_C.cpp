@@ -7,10 +7,10 @@ using PII = pair<int, int>;
 using PLI = pair<long long, int>;
 using PLL = pair<long long, long long>;
 
-const int MOD = 998244353;
-const int N = 5001;
-
-int fact[N * N], inv[N * N];
+const int N = 60000001;
+const int MOD = 1000000007;
+int fact[N];
+int inv[N];
 
 int qpow(int a, int k)
 {
@@ -34,14 +34,29 @@ void solve()
     int n;
     cin >> n;
 
-    LL res = 0;
+    fact[0] = 1;
     for (int i = 1; i <= n; i++)
     {
-        LL cur = 1;
-        for (int j = 1; j <= i; j++) cur = (cur * fact[n]) % MOD;
-        res = (res + (C(n, i) * C(n - 1, i - 1) % MOD * fact[i] % MOD * cur % MOD * fact[n * n - n] % MOD * i % MOD) % MOD);
-        //cout << res << '\n';
+        fact[i] = ((LL)fact[i - 1] * i) % MOD;
     }
+    inv[n] = qpow(fact[n], MOD - 2);
+    for (int i = n - 1; i >= 0; i--)
+    {
+        inv[i] = ((LL)inv[i + 1] * (i + 1)) % MOD;
+    }
+        
+    LL res = 0;
+    LL two = qpow(2, n);
+    LL big_fact = fact[n - 2];
+    LL co = ((n % 2 == 1)? -1 : 1);
+    for (int i = n; i >= 0; i--)
+    {
+        big_fact = big_fact * (2 * n - 1 - i) % MOD;
+        res = (res + co * C(n, i) * big_fact % MOD * two % MOD + MOD) % MOD;
+        two = two * inv[2] % MOD;
+        co = -co;
+    }
+    
     cout << res << '\n';
 }
 
@@ -51,19 +66,7 @@ int main()
     cin.tie(nullptr), cout.tie(nullptr);
 
     int T;
-    cin >> T;
-
-    const LL f = 5000;
-    fact[0] = 1;
-    for (int i = 1; i <= f * f; i++)
-    {
-        fact[i] = ((LL)fact[i - 1] * i) % MOD; 
-    }
-    inv[f * f] = qpow(fact[f * f], MOD - 2);
-    for (int i = f * f - 1; i >= 0; i--)
-    {
-        inv[i] = ((LL)inv[i + 1] * (i + 1)) % MOD;
-    }
+    T = 1;
 
     while (T--)
     {

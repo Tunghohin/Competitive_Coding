@@ -24,7 +24,7 @@ int qpow(int a, int k, int p)
     return res;
 }
 
-in t C(int a, int b, int p)//因为b一定小于p，所以单次计算裸式展开为blogb显然比方法二快
+int C(int a, int b, int p)//因为b一定小于p，所以单次计算裸式展开为blogb显然比方法二快
 {
     if (b>a) return 0;
 
