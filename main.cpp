@@ -9,16 +9,13 @@ using PLL = pair<long long, long long>;
 
 void solve()
 {
-	LL a, b, c;
-	cin >> a >> b >> c;
-
 
 }
 
 int main()
 {
 	ios::sync_with_stdio(false);
-	cin.tie(nullptr), cout.tie(nullptr);
+	cin.tie(nullptr);
 
 	int T;
 	cin >> T;
