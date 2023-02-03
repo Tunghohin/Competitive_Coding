@@ -33,7 +33,7 @@ void solve()
 
 	for (int i = 1; i <= n; i++)
 	{
-		if (__gcd(b[i], b[i + 1]) != a[i])
+		if (__gcd(b[i], b[i + 1]) > a[i])
 		{
 			cout << "No\n";
 			return;
