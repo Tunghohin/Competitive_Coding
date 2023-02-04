@@ -11,7 +11,31 @@ constexpr double PI = acos(-1);
 
 void solve()
 {
-	
+	int n, q;
+	cin >> n >> q;
+	priority_queue<int, vector<int>, greater<int>> pq;
+
+	for (int i = 1; i <= n; i++)
+	{
+		int cost;
+		cin >> cost;
+		pq.push(cost + i);
+	}
+
+	int res = 0;
+	while (!pq.empty())
+	{
+		auto u = pq.top();
+		pq.pop();
+
+		if (u <= q)
+		{
+			q -= u;
+			res++;
+		}
+	}
+
+	cout << res << '\n';
 }
 
 signed main()

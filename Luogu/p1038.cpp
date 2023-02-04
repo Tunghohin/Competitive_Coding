@@ -73,11 +73,6 @@ void solve()
 		}
 	}
 
-	for (int i = 1; i <= n; i++)
-	{
-		cout << st[i] << ' ' << '\n';
-	}
-
 	int found = false;
 	for (int i = 1; i <= n; i++)
 	{
