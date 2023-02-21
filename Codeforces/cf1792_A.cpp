@@ -9,7 +9,18 @@ using PLL = pair<long long, long long>;
 
 void solve()
 {
+	int n;
+	cin >> n;
 
+	int one_cnt = 0;
+	for (int i = 1; i <= n; i++)
+	{
+		int x;
+		cin >> x;
+		if (x == 1) one_cnt++;
+	}
+
+	cout << n - (one_cnt / 2) * 2 + one_cnt / 2 << '\n';
 }
 
 signed main()
